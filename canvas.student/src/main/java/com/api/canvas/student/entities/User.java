@@ -31,6 +31,9 @@ public class User {
     @Column(nullable = false)
     private String password;
 
+    @Column(name = "token_canvas",nullable = false)
+    private String tokenCanvas;
+
     @Column(nullable = false)
     private String university;
 
