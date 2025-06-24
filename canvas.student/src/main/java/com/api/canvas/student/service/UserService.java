@@ -5,6 +5,7 @@ import com.api.canvas.student.entities.User;
 import com.api.canvas.student.repository.UserRepository;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -69,6 +70,30 @@ public class UserService {
             return mapper.readValue(responseBody, UserIdDto.class);
 
         } catch (EntityNotFoundException | IOException | InterruptedException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public String getUserCanvasEmail(String tokenCanvas, String userCanvasId) {
+        try {
+            HttpClient client = HttpClient.newHttpClient();
+            HttpRequest request = HttpRequest.newBuilder()
+                    .uri(URI.create("https://canvas.instructure.com/api/v1/users/" + userCanvasId + "/profile"))
+                    .header("Authorization", "Bearer " + tokenCanvas)
+                    .GET()
+                    .build();
+            HttpResponse response = client.send(request, HttpResponse.BodyHandlers.ofString());
+
+            if (response.statusCode() == 200) {
+                String responseBody = response.body().toString();
+                ObjectMapper mapper = new ObjectMapper();
+
+                JsonNode root = mapper.readTree(responseBody);
+                return root.get("primary_email").asText();
+            }
+
+        } catch (IOException | InterruptedException e) {
             e.printStackTrace();
         }
         return null;

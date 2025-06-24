@@ -20,7 +20,16 @@ public class UserController {
     @GetMapping("{tokenCanvas}")
     public ResponseEntity<?> getUserCanvasId(@PathVariable String tokenCanvas) {
         try {
-            return ResponseEntity.ok(userService.getUserCanvasId(tokenCanvas));
+            return ResponseEntity.ok(userService.getUserCanvasIdAndName(tokenCanvas));
+        } catch (EntityNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        }
+    }
+
+    @GetMapping("{tokenCanvas}/{userCanvasId}")
+    public ResponseEntity<?> getUserCanvasEmail(@PathVariable String tokenCanvas, @PathVariable String userCanvasId) {
+        try {
+            return ResponseEntity.ok(userService.getUserCanvasEmail(tokenCanvas, userCanvasId));
         } catch (EntityNotFoundException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }
