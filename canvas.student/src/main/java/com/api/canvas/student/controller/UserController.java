@@ -9,6 +9,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/api/user")
 public class UserController {
@@ -35,8 +37,13 @@ public class UserController {
     }*/
 
     @PostMapping
-    public ResponseEntity<?> createNewUser(@RequestParam String tokenCanvas, @RequestBody UserDto user) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(userService.createNewUser(tokenCanvas, user));
+    public ResponseEntity<?> createNewUser(@RequestBody UserDto newUser) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(userService.createNewUser(newUser));
+    }
+
+    @GetMapping("/all")
+    public ResponseEntity<List<User>> getAllUser() {
+        return ResponseEntity.ok(userService.getAllUsers());
     }
 
 }

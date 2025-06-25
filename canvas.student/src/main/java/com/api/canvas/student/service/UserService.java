@@ -15,6 +15,7 @@ import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import java.util.List;
 
 @Service
 public class UserService {
@@ -66,9 +67,9 @@ public class UserService {
         return null;
     }
 
-    public User createNewUser(String tokenCanvas, UserDto newUser) {
-        UserIdDto userIdDto = getUserCanvasIdAndName(tokenCanvas);
-        String email = getUserCanvasEmail(tokenCanvas, userIdDto.getId());
+    public User createNewUser(UserDto newUser) {
+        UserIdDto userIdDto = getUserCanvasIdAndName(newUser.getTokenCanvas());
+        String email = getUserCanvasEmail(newUser.getTokenCanvas(), userIdDto.getId());
 
         User user = new User(
                 null,
@@ -76,12 +77,18 @@ public class UserService {
                 email,
                 newUser.getPassword(),
                 userIdDto.getId(),
-                tokenCanvas,
+                newUser.getTokenCanvas(),
                 newUser.getUniversity(),
                 newUser.getCourse(),
                 null
         );
         return userRepository.save(user);
     }
+
+    public List<User> getAllUsers() {
+        return userRepository.findAll();
+    }
+
+    /*public User getUserById(){}*/
 
 }
