@@ -1,14 +1,13 @@
 package com.api.canvas.student.controller;
 
+import com.api.canvas.student.dto.UserDto;
+import com.api.canvas.student.entities.User;
 import com.api.canvas.student.service.UserService;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/user")
@@ -17,7 +16,7 @@ public class UserController {
     @Autowired
     private UserService userService;
 
-    @GetMapping("{tokenCanvas}")
+    /*@GetMapping("{tokenCanvas}")
     public ResponseEntity<?> getUserCanvasId(@PathVariable String tokenCanvas) {
         try {
             return ResponseEntity.ok(userService.getUserCanvasIdAndName(tokenCanvas));
@@ -33,6 +32,11 @@ public class UserController {
         } catch (EntityNotFoundException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }
+    }*/
+
+    @PostMapping
+    public ResponseEntity<?> createNewUser(@RequestParam String tokenCanvas, @RequestBody UserDto user) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(userService.createNewUser(tokenCanvas, user));
     }
 
 }
