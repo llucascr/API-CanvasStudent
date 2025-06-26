@@ -16,6 +16,7 @@ import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class UserService {
@@ -89,6 +90,9 @@ public class UserService {
         return userRepository.findAll();
     }
 
-    /*public User getUserById(){}*/
+    public User getUserById(Long userId){
+        Optional<User> optionalUser = userRepository.findById(userId);
+        return optionalUser.orElseThrow(() -> new EntityNotFoundException("Usuário com ID " + userId + "não encontrado"));
+    }
 
 }

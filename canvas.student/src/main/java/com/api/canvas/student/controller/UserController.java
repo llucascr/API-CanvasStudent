@@ -46,4 +46,13 @@ public class UserController {
         return ResponseEntity.ok(userService.getAllUsers());
     }
 
+    @GetMapping
+    public ResponseEntity<?> getUserById(@RequestParam Long userId) {
+        try {
+            return ResponseEntity.ok(userService.getUserById(userId));
+        } catch (EntityNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(userService.getUserById(userId));
+        }
+    }
+
 }
