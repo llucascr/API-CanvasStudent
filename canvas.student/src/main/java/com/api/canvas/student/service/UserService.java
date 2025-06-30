@@ -95,4 +95,11 @@ public class UserService {
         return optionalUser.orElseThrow(() -> new EntityNotFoundException("Usuário com ID " + userId + "não encontrado"));
     }
 
+    public void deleteUser(Long userId) {
+        if (!userRepository.existsById(userId)) {
+            throw new EntityNotFoundException("Usuário com ID " + userId + "não encontrado");
+        }
+        userRepository.deleteById(userId);
+    }
+
 }

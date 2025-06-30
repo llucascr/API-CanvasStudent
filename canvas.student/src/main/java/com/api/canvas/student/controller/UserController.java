@@ -55,4 +55,14 @@ public class UserController {
         }
     }
 
+    @DeleteMapping
+    public ResponseEntity<?> deleteUser(@RequestParam Long userId) {
+        try {
+            userService.deleteUser(userId);
+            return ResponseEntity.noContent().build();
+        } catch (EntityNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        }
+    }
+
 }
