@@ -65,4 +65,13 @@ public class UserController {
         }
     }
 
+    @PutMapping
+    public ResponseEntity<?> updateUser(@RequestParam Long userId, @RequestBody User user) {
+        try {
+            return ResponseEntity.ok(userService.updateUser(userId, user));
+        } catch (EntityNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        }
+    }
+
 }

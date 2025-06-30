@@ -102,4 +102,13 @@ public class UserService {
         userRepository.deleteById(userId);
     }
 
+    public User updateUser(Long userId, User user) {
+        Optional<User> optionalUser = userRepository.findById(userId);
+        if (optionalUser.isPresent()) {
+            user.setUserId(userId);
+            return userRepository.save(user);
+        }
+        throw new EntityNotFoundException("Usuário com ID " + userId + "não encontrado");
+    }
+
 }
