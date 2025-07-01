@@ -36,6 +36,18 @@ public class UserController {
         }
     }*/
 
+    @GetMapping("/verifyToken")
+    public ResponseEntity<?> getUserCanvasId(@RequestParam String tokenCanvas) {
+        try {
+            if (userService.getUserCanvasIdAndName(tokenCanvas) == null) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Token Invalido");
+            }
+            return ResponseEntity.status(HttpStatus.OK).body("Token Valido");
+        } catch (EntityNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        }
+    }
+
     @PostMapping
     public ResponseEntity<?> createNewUser(@RequestBody UserDto newUser) {
         return ResponseEntity.status(HttpStatus.CREATED).body(userService.createNewUser(newUser));
