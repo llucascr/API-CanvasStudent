@@ -1,0 +1,12 @@
+version: '3.8'
+services:
+  postgres:
+    image: postgres:latest
+    container_name: postgresApiCanvasStudent
+    environment:
+      POSTGRES_DB: apiCanvasStudent
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5431:5432" #"BANCO:DOCKER"
+    restart: on-failure
