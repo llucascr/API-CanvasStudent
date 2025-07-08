@@ -5,7 +5,9 @@ import lombok.*;
 
 import java.util.List;
 
-@Data
+@Getter
+@Setter
+@NoArgsConstructor
 @Entity
 @Table(name = "subject_tb")
 public class Subject {

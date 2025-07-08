@@ -6,6 +6,8 @@ import com.api.canvas.student.repository.SubjectRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 
 @Service
 public class SubjectService {
@@ -23,6 +25,10 @@ public class SubjectService {
                 null
         );
         return subjectRepository.save(subject);
+    }
+
+    public List<Subject> getAllSubjects() {
+        return subjectRepository.findAll();
     }
 
 }
