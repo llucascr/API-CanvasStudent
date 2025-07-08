@@ -3,10 +3,12 @@ package com.api.canvas.student.service;
 import com.api.canvas.student.dto.SubjectDto;
 import com.api.canvas.student.entities.Subject;
 import com.api.canvas.student.repository.SubjectRepository;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 
 @Service
@@ -29,6 +31,11 @@ public class SubjectService {
 
     public List<Subject> getAllSubjects() {
         return subjectRepository.findAll();
+    }
+
+    public Subject getSubjectById(Long subjectId) {
+        Optional<Subject> subjectOptional = subjectRepository.findById(subjectId);
+        return subjectOptional.orElseThrow(() -> new EntityNotFoundException("Materia com ID " + subjectId + "não encontrada"));
     }
 
 }
