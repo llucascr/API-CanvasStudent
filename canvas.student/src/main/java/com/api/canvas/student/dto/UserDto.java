@@ -2,12 +2,9 @@ package com.api.canvas.student.dto;
 
 import lombok.Data;
 
-@Data
-public class UserDto {
-
-    private String tokenCanvas;
-    private String password;
-    private String university;
-    private String course;
-
-}
+public record UserDto(
+        String tokenCanvas,
+        String password,
+        String university,
+        String course
+) {}

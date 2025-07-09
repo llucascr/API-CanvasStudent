@@ -72,18 +72,18 @@ public class UserService {
     }
 
     public User createNewUser(UserDto newUser) {
-        UserIdDto userIdDto = getUserCanvasIdAndName(newUser.getTokenCanvas());
-        String email = getUserCanvasEmail(newUser.getTokenCanvas(), userIdDto.getId());
+        UserIdDto userIdDto = getUserCanvasIdAndName(newUser.tokenCanvas());
+        String email = getUserCanvasEmail(newUser.tokenCanvas(), userIdDto.getId());
 
         User user = new User(
                 null,
                 userIdDto.getName(),
                 email,
-                newUser.getPassword(),
+                newUser.password(),
                 userIdDto.getId(),
-                newUser.getTokenCanvas(),
-                newUser.getUniversity(),
-                newUser.getCourse(),
+                newUser.tokenCanvas(),
+                newUser.university(),
+                newUser.course(),
                 null
         );
         return userRepository.save(user);
