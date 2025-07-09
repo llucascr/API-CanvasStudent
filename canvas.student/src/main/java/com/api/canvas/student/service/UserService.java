@@ -24,7 +24,7 @@ public class UserService {
     @Autowired
     private UserRepository userRepository;
 
-    private UserIdDto getUserCanvasIdAndName(String tokenCanvas) {
+    public UserIdDto getUserCanvasIdAndName(String tokenCanvas) throws EntityNotFoundException {
         try {
             HttpClient client = HttpClient.newHttpClient();
             HttpRequest request = HttpRequest.newBuilder()
@@ -34,14 +34,17 @@ public class UserService {
                     .build();
             HttpResponse response = client.send(request, HttpResponse.BodyHandlers.ofString());
 
-            ObjectMapper mapper = new ObjectMapper();
-            String responseBody = response.body().toString();
-            return mapper.readValue(responseBody, UserIdDto.class);
+            if (response.statusCode() == 200) {
+                ObjectMapper mapper = new ObjectMapper();
+                String responseBody = response.body().toString();
+                return mapper.readValue(responseBody, UserIdDto.class);
+            }
+           return null;
 
         } catch (EntityNotFoundException | IOException | InterruptedException e) {
             e.printStackTrace();
+            return null;
         }
-        return null;
     }
 
     private String getUserCanvasEmail(String tokenCanvas, String userCanvasId) {
@@ -93,6 +96,22 @@ public class UserService {
     public User getUserById(Long userId){
         Optional<User> optionalUser = userRepository.findById(userId);
         return optionalUser.orElseThrow(() -> new EntityNotFoundException("Usuário com ID " + userId + "não encontrado"));
+    }
+
+    public void deleteUser(Long userId) {
+        if (!userRepository.existsById(userId)) {
+            throw new EntityNotFoundException("Usuário com ID " + userId + "não encontrado");
+        }
+        userRepository.deleteById(userId);
+    }
+
+    public User updateUser(Long userId, User user) {
+        Optional<User> optionalUser = userRepository.findById(userId);
+        if (optionalUser.isPresent()) {
+            user.setUserId(userId);
+            return userRepository.save(user);
+        }
+        throw new EntityNotFoundException("Usuário com ID " + userId + "não encontrado");
     }
 
 }

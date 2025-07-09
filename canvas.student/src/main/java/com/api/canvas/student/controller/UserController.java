@@ -36,6 +36,18 @@ public class UserController {
         }
     }*/
 
+    @GetMapping("/verifyToken")
+    public ResponseEntity<?> getUserCanvasId(@RequestParam String tokenCanvas) {
+        try {
+            if (userService.getUserCanvasIdAndName(tokenCanvas) == null) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Token Invalido");
+            }
+            return ResponseEntity.status(HttpStatus.OK).body("Token Valido");
+        } catch (EntityNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        }
+    }
+
     @PostMapping
     public ResponseEntity<?> createNewUser(@RequestBody UserDto newUser) {
         return ResponseEntity.status(HttpStatus.CREATED).body(userService.createNewUser(newUser));
@@ -52,6 +64,25 @@ public class UserController {
             return ResponseEntity.ok(userService.getUserById(userId));
         } catch (EntityNotFoundException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(userService.getUserById(userId));
+        }
+    }
+
+    @DeleteMapping
+    public ResponseEntity<?> deleteUser(@RequestParam Long userId) {
+        try {
+            userService.deleteUser(userId);
+            return ResponseEntity.noContent().build();
+        } catch (EntityNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        }
+    }
+
+    @PutMapping
+    public ResponseEntity<?> updateUser(@RequestParam Long userId, @RequestBody User user) {
+        try {
+            return ResponseEntity.ok(userService.updateUser(userId, user));
+        } catch (EntityNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }
     }
 
