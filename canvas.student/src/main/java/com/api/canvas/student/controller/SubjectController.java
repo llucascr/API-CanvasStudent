@@ -47,4 +47,13 @@ public class SubjectController {
         }
     }
 
+    @PutMapping
+    public ResponseEntity<?> updateSubject(@RequestBody Subject subject) {
+        try {
+            return ResponseEntity.ok(subjectService.updateSubject(subject.getSubjectId(), subject));
+        } catch (EntityNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        }
+    }
+
 }

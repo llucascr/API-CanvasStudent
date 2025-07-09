@@ -45,4 +45,13 @@ public class SubjectService {
         subjectRepository.deleteById(subjectId);
     }
 
+    public Subject updateSubject(Long subjectId, Subject subject) {
+        Optional<Subject> subjectOptional = subjectRepository.findById(subjectId);
+        if (subjectOptional.isPresent()) {
+            subject.setSubjectId(subjectId);
+            return subjectRepository.save(subject);
+        }
+        throw new EntityNotFoundException("Materia com ID " + subjectId + "não encontrada");
+    }
+
 }
