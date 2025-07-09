@@ -38,4 +38,11 @@ public class SubjectService {
         return subjectOptional.orElseThrow(() -> new EntityNotFoundException("Materia com ID " + subjectId + "não encontrada"));
     }
 
+    public void deleteSubject(Long subjectId) {
+        if (!subjectRepository.existsById(subjectId)) {
+            throw new EntityNotFoundException("Materia com ID " + subjectId + "não encontrada");
+        }
+        subjectRepository.deleteById(subjectId);
+    }
+
 }

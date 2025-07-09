@@ -37,4 +37,14 @@ public class SubjectController {
         }
     }
 
+    @DeleteMapping
+    public ResponseEntity<?> deleteSubject(@RequestParam Long subjectId) {
+        try {
+            subjectService.deleteSubject(subjectId);
+            return ResponseEntity.noContent().build();
+        } catch (EntityNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        }
+    }
+
 }
