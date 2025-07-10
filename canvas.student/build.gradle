@@ -34,6 +34,8 @@ dependencies {
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 	implementation 'com.fasterxml.jackson.core:jackson-databind:2.17.0'
+	implementation("org.modelmapper:modelmapper:3.2.2")
+	implementation("org.springframework.boot:spring-boot-starter-validation:3.4.4")
 }
 
 tasks.named('test') {
