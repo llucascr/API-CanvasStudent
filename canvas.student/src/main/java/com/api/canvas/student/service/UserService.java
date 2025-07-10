@@ -96,12 +96,12 @@ public class UserService {
 
     public User getUserById(Long userId){
         Optional<User> optionalUser = userRepository.findById(userId);
-        return optionalUser.orElseThrow(() -> new UserNotFound("Usuário com ID " + userId + "não encontrado"));
+        return optionalUser.orElseThrow(() -> new UserNotFound("Usuário com ID " + userId + " não encontrado"));
     }
 
     public void deleteUser(Long userId) {
         if (!userRepository.existsById(userId)) {
-            throw new UserNotFound("Usuário com ID " + userId + "não encontrado");
+            throw new UserNotFound("Usuário com ID " + userId + " não encontrado");
         }
         userRepository.deleteById(userId);
     }
@@ -112,7 +112,7 @@ public class UserService {
             user.setUserId(userId);
             return userRepository.save(user);
         }
-        throw new UserNotFound("Usuário com ID " + userId + "não encontrado");
+        throw new UserNotFound("Usuário com ID " + userId + " não encontrado");
     }
 
 }
