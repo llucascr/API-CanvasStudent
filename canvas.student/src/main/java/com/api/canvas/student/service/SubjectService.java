@@ -36,12 +36,12 @@ public class SubjectService {
 
     public Subject getSubjectById(Long subjectId) {
         Optional<Subject> subjectOptional = subjectRepository.findById(subjectId);
-        return subjectOptional.orElseThrow(() -> new SubjectNotFound("Materia com ID " + subjectId + "não encontrada"));
+        return subjectOptional.orElseThrow(() -> new SubjectNotFound("Materia com ID " + subjectId + " não encontrada"));
     }
 
     public void deleteSubject(Long subjectId) {
         if (!subjectRepository.existsById(subjectId)) {
-            throw new SubjectNotFound("Materia com ID " + subjectId + "não encontrada");
+            throw new SubjectNotFound("Materia com ID " + subjectId + " não encontrada");
         }
         subjectRepository.deleteById(subjectId);
     }
@@ -52,7 +52,7 @@ public class SubjectService {
             subject.setSubjectId(subjectId);
             return subjectRepository.save(subject);
         }
-        throw new SubjectNotFound("Materia com ID " + subjectId + "não encontrada");
+        throw new SubjectNotFound("Materia com ID " + subjectId + " não encontrada");
     }
 
 }
