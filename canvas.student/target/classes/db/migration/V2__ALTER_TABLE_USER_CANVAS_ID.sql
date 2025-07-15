@@ -1,0 +1,1 @@
+ALTER TABLE user_tb ADD COLUMN user_canvas_id VARCHAR(500) NOT NULL UNIQUE;
