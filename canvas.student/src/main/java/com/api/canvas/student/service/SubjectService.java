@@ -2,8 +2,8 @@ package com.api.canvas.student.service;
 
 import com.api.canvas.student.dto.SubjectDto;
 import com.api.canvas.student.entities.Subject;
+import com.api.canvas.student.exception.SubjectNotFound;
 import com.api.canvas.student.repository.SubjectRepository;
-import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -35,12 +35,12 @@ public class SubjectService {
 
     public Subject getSubjectById(Long subjectId) {
         Optional<Subject> subjectOptional = subjectRepository.findById(subjectId);
-        return subjectOptional.orElseThrow(() -> new EntityNotFoundException("Materia com ID " + subjectId + "não encontrada"));
+        return subjectOptional.orElseThrow(() -> new SubjectNotFound("Materia com ID " + subjectId + " não encontrada"));
     }
 
     public void deleteSubject(Long subjectId) {
         if (!subjectRepository.existsById(subjectId)) {
-            throw new EntityNotFoundException("Materia com ID " + subjectId + "não encontrada");
+            throw new SubjectNotFound("Materia com ID " + subjectId + " não encontrada");
         }
         subjectRepository.deleteById(subjectId);
     }
@@ -51,7 +51,7 @@ public class SubjectService {
             subject.setSubjectId(subjectId);
             return subjectRepository.save(subject);
         }
-        throw new EntityNotFoundException("Materia com ID " + subjectId + "não encontrada");
+        throw new SubjectNotFound("Materia com ID " + subjectId + " não encontrada");
     }
 
 }

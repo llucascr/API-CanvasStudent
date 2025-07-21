@@ -3,6 +3,7 @@ package com.api.canvas.student.service;
 import com.api.canvas.student.dto.UserDto;
 import com.api.canvas.student.dto.UserIdDto;
 import com.api.canvas.student.entities.User;
+import com.api.canvas.student.exception.UserNotFound;
 import com.api.canvas.student.repository.UserRepository;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -39,7 +40,7 @@ public class UserService {
                 String responseBody = response.body().toString();
                 return mapper.readValue(responseBody, UserIdDto.class);
             }
-           return null;
+            return null;
 
         } catch (EntityNotFoundException | IOException | InterruptedException e) {
             e.printStackTrace();
@@ -95,12 +96,12 @@ public class UserService {
 
     public User getUserById(Long userId){
         Optional<User> optionalUser = userRepository.findById(userId);
-        return optionalUser.orElseThrow(() -> new EntityNotFoundException("Usuário com ID " + userId + "não encontrado"));
+        return optionalUser.orElseThrow(() -> new UserNotFound("Usuário com ID " + userId + " não encontrado"));
     }
 
     public void deleteUser(Long userId) {
         if (!userRepository.existsById(userId)) {
-            throw new EntityNotFoundException("Usuário com ID " + userId + "não encontrado");
+            throw new UserNotFound("Usuário com ID " + userId + " não encontrado");
         }
         userRepository.deleteById(userId);
     }
@@ -111,7 +112,7 @@ public class UserService {
             user.setUserId(userId);
             return userRepository.save(user);
         }
-        throw new EntityNotFoundException("Usuário com ID " + userId + "não encontrado");
+        throw new UserNotFound("Usuário com ID " + userId + " não encontrado");
     }
 
 }

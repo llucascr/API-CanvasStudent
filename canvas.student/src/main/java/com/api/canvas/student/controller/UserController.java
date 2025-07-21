@@ -3,7 +3,6 @@ package com.api.canvas.student.controller;
 import com.api.canvas.student.dto.UserDto;
 import com.api.canvas.student.entities.User;
 import com.api.canvas.student.service.UserService;
-import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -38,14 +37,10 @@ public class UserController {
 
     @GetMapping("/verifyToken")
     public ResponseEntity<?> getUserCanvasId(@RequestParam String tokenCanvas) {
-        try {
-            if (userService.getUserCanvasIdAndName(tokenCanvas) == null) {
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Token Invalido");
-            }
-            return ResponseEntity.status(HttpStatus.OK).body("Token Valido");
-        } catch (EntityNotFoundException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        if (userService.getUserCanvasIdAndName(tokenCanvas) == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Token Invalido");
         }
+        return ResponseEntity.status(HttpStatus.OK).body("Token Valido");
     }
 
     @PostMapping
@@ -60,30 +55,18 @@ public class UserController {
 
     @GetMapping
     public ResponseEntity<?> getUserById(@RequestParam Long userId) {
-        try {
-            return ResponseEntity.ok(userService.getUserById(userId));
-        } catch (EntityNotFoundException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(userService.getUserById(userId));
-        }
+        return ResponseEntity.ok(userService.getUserById(userId));
     }
 
     @DeleteMapping
     public ResponseEntity<?> deleteUser(@RequestParam Long userId) {
-        try {
-            userService.deleteUser(userId);
-            return ResponseEntity.noContent().build();
-        } catch (EntityNotFoundException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
-        }
+        userService.deleteUser(userId);
+        return ResponseEntity.noContent().build();
     }
 
     @PutMapping
     public ResponseEntity<?> updateUser(@RequestParam Long userId, @RequestBody User user) {
-        try {
-            return ResponseEntity.ok(userService.updateUser(userId, user));
-        } catch (EntityNotFoundException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
-        }
+        return ResponseEntity.ok(userService.updateUser(userId, user));
     }
 
 }
