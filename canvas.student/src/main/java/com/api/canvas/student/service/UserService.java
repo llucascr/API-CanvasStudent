@@ -40,7 +40,7 @@ public class UserService {
                 String responseBody = response.body().toString();
                 return mapper.readValue(responseBody, UserIdDto.class);
             }
-           return null;
+            return null;
 
         } catch (EntityNotFoundException | IOException | InterruptedException e) {
             e.printStackTrace();
