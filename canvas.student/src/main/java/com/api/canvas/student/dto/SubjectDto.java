@@ -4,6 +4,5 @@ import com.api.canvas.student.entities.StatusSubject;
 
 public record SubjectDto(
         String name,
-        byte semester,
-        StatusSubject status
+        byte semester
 ) {}

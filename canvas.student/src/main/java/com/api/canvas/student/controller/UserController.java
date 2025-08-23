@@ -3,6 +3,7 @@ package com.api.canvas.student.controller;
 import com.api.canvas.student.dto.UserDto;
 import com.api.canvas.student.entities.User;
 import com.api.canvas.student.service.UserService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -10,12 +11,13 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@RequiredArgsConstructor
 @RestController
 @RequestMapping("/api/user")
 public class UserController {
 
-    @Autowired
-    private UserService userService;
+
+    private final UserService userService;
 
     /*@GetMapping("{tokenCanvas}")
     public ResponseEntity<?> getUserCanvasId(@PathVariable String tokenCanvas) {

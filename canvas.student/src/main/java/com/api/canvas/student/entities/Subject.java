@@ -1,15 +1,15 @@
 package com.api.canvas.student.entities;
 
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.util.List;
 
 @Getter
 @Setter
+@AllArgsConstructor
 @NoArgsConstructor
+@Builder
 @Entity
 @Table(name = "subject_tb")
 public class Subject {
@@ -32,11 +32,4 @@ public class Subject {
     @OneToMany(mappedBy = "subject")
     private List<UserSubject> users;
 
-    public Subject(Long subjectId, String name, byte semester, StatusSubject status, List<UserSubject> users) {
-        this.subjectId = subjectId;
-        this.name = name;
-        this.semester = semester;
-        this.status = status;
-        this.users = users;
-    }
 }
