@@ -44,4 +44,9 @@ public class SubjectController {
         return ResponseEntity.ok(subjectService.updateSubject(subject.getSubjectId(), subject));
     }
 
+    @PostMapping(path = "/addUser")
+    public ResponseEntity<?> addUserToSubject(@RequestParam Long subjectId, @RequestParam Long userId) {
+        return ResponseEntity.status(HttpStatus.OK).body(subjectService.addUserToSubject(subjectId, userId));
+    }
+
 }

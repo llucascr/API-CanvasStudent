@@ -1,5 +1,6 @@
 package com.api.canvas.student.entities;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -12,6 +13,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@Data
 @Entity
 @Table(name = "userSubject_tb")
 public class UserSubject {
@@ -34,4 +36,5 @@ public class UserSubject {
 
     @OneToMany(mappedBy = "userSubject", cascade = CascadeType.ALL)
     private List<Grade> grades = new ArrayList<>();
+
 }

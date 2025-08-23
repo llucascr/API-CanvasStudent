@@ -1,5 +1,6 @@
 package com.api.canvas.student.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -10,6 +11,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
+@Data
 @Entity
 @Table(name = "subject_tb")
 public class Subject {
@@ -30,6 +32,7 @@ public class Subject {
     private StatusSubject status;
 
     @OneToMany(mappedBy = "subject")
+    @JsonIgnore
     private List<UserSubject> users;
 
 }

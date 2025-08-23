@@ -1,6 +1,8 @@
 package com.api.canvas.student.entities;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -44,6 +46,7 @@ public class User {
     private String course;
 
     @OneToMany(mappedBy = "user")
+    @JsonIgnore
     private List<UserSubject> subjects;
 
 }
