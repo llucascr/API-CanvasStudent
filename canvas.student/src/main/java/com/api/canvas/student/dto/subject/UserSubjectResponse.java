@@ -1,4 +1,4 @@
-package com.api.canvas.student.dto;
+package com.api.canvas.student.dto.subject;
 
 import com.api.canvas.student.entities.StatusSubject;
 

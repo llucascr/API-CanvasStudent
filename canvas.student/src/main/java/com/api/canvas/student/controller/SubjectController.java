@@ -1,10 +1,9 @@
 package com.api.canvas.student.controller;
 
-import com.api.canvas.student.dto.SubjectDto;
+import com.api.canvas.student.dto.subject.SubjectDto;
 import com.api.canvas.student.entities.Subject;
 import com.api.canvas.student.service.SubjectService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

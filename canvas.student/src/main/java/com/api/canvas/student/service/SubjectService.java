@@ -1,7 +1,7 @@
 package com.api.canvas.student.service;
 
-import com.api.canvas.student.dto.SubjectDto;
-import com.api.canvas.student.dto.UserSubjectResponse;
+import com.api.canvas.student.dto.subject.SubjectDto;
+import com.api.canvas.student.dto.subject.UserSubjectResponse;
 import com.api.canvas.student.entities.*;
 import com.api.canvas.student.exception.SubjectNotFound;
 import com.api.canvas.student.exception.UserNotFound;
@@ -11,7 +11,6 @@ import com.api.canvas.student.repository.UserSubjectRespository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;

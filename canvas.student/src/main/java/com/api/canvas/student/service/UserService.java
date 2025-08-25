@@ -1,6 +1,6 @@
 package com.api.canvas.student.service;
 
-import com.api.canvas.student.dto.UserDto;
+import com.api.canvas.student.dto.user.UserDto;
 import com.api.canvas.student.dto.UserIdDto;
 import com.api.canvas.student.entities.User;
 import com.api.canvas.student.exception.UserNotFound;
@@ -9,7 +9,6 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
