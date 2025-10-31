@@ -1,4 +1,4 @@
-package com.api.canvas.student.dto.user;
+package com.api.canvas.student.dto.request.user;
 
 public record UserDto(
         String tokenCanvas,

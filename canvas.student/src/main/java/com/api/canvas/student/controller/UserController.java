@@ -1,6 +1,7 @@
 package com.api.canvas.student.controller;
 
-import com.api.canvas.student.dto.user.UserDto;
+import com.api.canvas.student.dto.request.user.UserDto;
+import com.api.canvas.student.dto.response.user.UserResponse;
 import com.api.canvas.student.entities.User;
 import com.api.canvas.student.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -50,8 +51,11 @@ public class UserController {
     }
 
     @GetMapping("/all")
-    public ResponseEntity<List<User>> getAllUser() {
-        return ResponseEntity.ok(userService.getAllUsers());
+    public ResponseEntity<List<UserResponse>> getAllUser(
+            @RequestParam(defaultValue = "0", required = false) int page,
+            @RequestParam(defaultValue = "10", required = false) int size
+    ) {
+        return ResponseEntity.status(HttpStatus.OK).body(userService.getAllUsers(page, size).getContent());
     }
 
     @GetMapping

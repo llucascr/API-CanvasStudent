@@ -1,7 +1,8 @@
 package com.api.canvas.student.service;
 
-import com.api.canvas.student.dto.user.UserDto;
+import com.api.canvas.student.dto.request.user.UserDto;
 import com.api.canvas.student.dto.UserIdDto;
+import com.api.canvas.student.dto.response.user.UserResponse;
 import com.api.canvas.student.entities.User;
 import com.api.canvas.student.exception.UserNotFound;
 import com.api.canvas.student.repository.UserRepository;
@@ -9,6 +10,11 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
+import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -24,6 +30,7 @@ import java.util.Optional;
 public class UserService {
 
     private final UserRepository userRepository;
+    private final ModelMapper modelMapper;
 
     public UserIdDto getUserCanvasIdAndName(String tokenCanvas) throws EntityNotFoundException {
         try {
@@ -90,8 +97,15 @@ public class UserService {
         return userRepository.save(user);
     }
 
-    public List<User> getAllUsers() {
-        return userRepository.findAll();
+    public Page<UserResponse> getAllUsers(int page, int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        Page<User> users = userRepository.findAll(pageable);
+
+        List<UserResponse> userResponses = users.getContent().stream()
+                .map(user -> modelMapper.map(user, UserResponse.class))
+                .toList();
+
+        return new PageImpl<>(userResponses, pageable, users.getTotalElements());
     }
 
     public User getUserById(Long userId){
