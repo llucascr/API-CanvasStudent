@@ -2,6 +2,7 @@ package com.api.canvas.student.service;
 
 import com.api.canvas.student.dto.request.user.UserDto;
 import com.api.canvas.student.dto.UserIdDto;
+import com.api.canvas.student.dto.request.user.UserRequest;
 import com.api.canvas.student.dto.response.user.UserResponse;
 import com.api.canvas.student.entities.User;
 import com.api.canvas.student.exception.UserNotFound;
@@ -79,22 +80,21 @@ public class UserService {
         return null;
     }
 
-    public User createNewUser(UserDto newUser) {
-        UserIdDto userIdDto = getUserCanvasIdAndName(newUser.tokenCanvas());
-        String email = getUserCanvasEmail(newUser.tokenCanvas(), userIdDto.getId());
+    public UserResponse createNewUser(UserRequest newUser) {
+        UserIdDto userIdDto = getUserCanvasIdAndName(newUser.getTokenCanvas());
+        String email = getUserCanvasEmail(newUser.getTokenCanvas(), userIdDto.getId());
 
-        User user = new User(
-                null,
-                userIdDto.getName(),
-                email,
-                newUser.password(),
-                userIdDto.getId(),
-                newUser.tokenCanvas(),
-                newUser.university(),
-                newUser.course(),
-                null
-        );
-        return userRepository.save(user);
+        User user = User.builder()
+                .name(userIdDto.getName())
+                .email(email)
+                .password(newUser.getPassword())
+                .userCanvasId(userIdDto.getId())
+                .tokenCanvas(newUser.getTokenCanvas())
+                .university(newUser.getUniversity())
+                .course(newUser.getCourse())
+                .build();
+
+        return modelMapper.map(userRepository.save(user), UserResponse.class);
     }
 
     public Page<UserResponse> getAllUsers(int page, int size) {

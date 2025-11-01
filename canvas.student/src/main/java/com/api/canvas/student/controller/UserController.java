@@ -1,6 +1,7 @@
 package com.api.canvas.student.controller;
 
 import com.api.canvas.student.dto.request.user.UserDto;
+import com.api.canvas.student.dto.request.user.UserRequest;
 import com.api.canvas.student.dto.response.user.UserResponse;
 import com.api.canvas.student.entities.User;
 import com.api.canvas.student.service.UserService;
@@ -46,7 +47,7 @@ public class UserController {
     }
 
     @PostMapping
-    public ResponseEntity<?> createNewUser(@RequestBody UserDto newUser) {
+    public ResponseEntity<UserResponse> createNewUser(@RequestBody UserRequest newUser) {
         return ResponseEntity.status(HttpStatus.CREATED).body(userService.createNewUser(newUser));
     }
 
