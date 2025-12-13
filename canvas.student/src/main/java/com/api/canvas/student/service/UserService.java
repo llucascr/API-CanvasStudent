@@ -1,6 +1,5 @@
 package com.api.canvas.student.service;
 
-import com.api.canvas.student.dto.request.user.UserDto;
 import com.api.canvas.student.dto.UserIdDto;
 import com.api.canvas.student.dto.request.user.UserRequest;
 import com.api.canvas.student.dto.response.user.UserResponse;
@@ -12,19 +11,30 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatusCode;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
+import org.springframework.web.reactive.function.client.WebClient;
+import reactor.core.publisher.Mono;
 
+import java.awt.*;
 import java.io.IOException;
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import java.time.Duration;
 import java.util.List;
 import java.util.Optional;
+
 
 @RequiredArgsConstructor
 @Service
@@ -32,28 +42,23 @@ public class UserService {
 
     private final UserRepository userRepository;
     private final ModelMapper modelMapper;
+    private final WebClient canvasWebClient;
+
+    private final static Logger log = LoggerFactory.getLogger(UserService.class);
 
     public UserIdDto getUserCanvasIdAndName(String tokenCanvas) throws EntityNotFoundException {
-        try {
-            HttpClient client = HttpClient.newHttpClient();
-            HttpRequest request = HttpRequest.newBuilder()
-                    .uri(URI.create("https://canvas.instructure.com/api/v1/users/self"))
-                    .header("Authorization", "Bearer " + tokenCanvas)
-                    .GET()
-                    .build();
-            HttpResponse response = client.send(request, HttpResponse.BodyHandlers.ofString());
-
-            if (response.statusCode() == 200) {
-                ObjectMapper mapper = new ObjectMapper();
-                String responseBody = response.body().toString();
-                return mapper.readValue(responseBody, UserIdDto.class);
-            }
-            return null;
-
-        } catch (EntityNotFoundException | IOException | InterruptedException e) {
-            e.printStackTrace();
-            return null;
-        }
+        return canvasWebClient.get()
+                .uri("/api/v1/users/self")
+                .header(HttpHeaders.AUTHORIZATION, "Bearer " + tokenCanvas)
+                .accept(MediaType.APPLICATION_JSON)
+                .retrieve()
+                .onStatus(HttpStatusCode::is4xxClientError,
+                        response -> Mono.error(new Exception("Autenticação falhou")))
+                .onStatus(HttpStatusCode::is5xxServerError,
+                        response -> Mono.error(new Exception("Servidor indisponível")))
+                .bodyToMono(UserIdDto.class)
+                .timeout(Duration.ofSeconds(10))
+                .block();
     }
 
     private String getUserCanvasEmail(String tokenCanvas, String userCanvasId) {
