@@ -4,7 +4,7 @@ import com.api.canvas.student.dto.response.user.UserIdResponseDTO;
 import com.api.canvas.student.dto.request.user.UserRequestDTO;
 import com.api.canvas.student.dto.response.user.UserResponseDTO;
 import com.api.canvas.student.entities.User;
-import com.api.canvas.student.exception.UserNotFound;
+import com.api.canvas.student.exception.DataNotFoundException;
 import com.api.canvas.student.mapper.UserMapper;
 import com.api.canvas.student.repository.UserRepository;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -104,14 +104,14 @@ public class UserService {
 
     public UserResponseDTO getUserById(Long userId){
         User user = userRepository.findById(userId).orElseThrow(
-                () -> new UserNotFound("Usuário com ID " + userId + " não encontrado"));
+                () -> new DataNotFoundException("Usuário com ID " + userId + " não encontrado"));
 
         return mapper.fromUserToUserResponse(user);
     }
 
     public void deleteUser(Long userId) {
         if (!userRepository.existsById(userId)) {
-            throw new UserNotFound("Usuário com ID " + userId + " não encontrado");
+            throw new DataNotFoundException("Usuário com ID " + userId + " não encontrado");
         }
 
     }
@@ -122,7 +122,7 @@ public class UserService {
             user.setUserId(userId);
             return userRepository.save(user);
         }
-        throw new UserNotFound("Usuário com ID " + userId + " não encontrado");
+        throw new DataNotFoundException("Usuário com ID " + userId + " não encontrado");
     }
 
 }

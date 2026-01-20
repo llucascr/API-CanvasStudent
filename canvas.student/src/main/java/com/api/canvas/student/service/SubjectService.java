@@ -3,8 +3,7 @@ package com.api.canvas.student.service;
 import com.api.canvas.student.dto.request.subject.SubjectRequestDTO;
 import com.api.canvas.student.dto.response.subject.UserSubjectResponse;
 import com.api.canvas.student.entities.*;
-import com.api.canvas.student.exception.SubjectNotFound;
-import com.api.canvas.student.exception.UserNotFound;
+import com.api.canvas.student.exception.DataNotFoundException;
 import com.api.canvas.student.repository.SubjectRepository;
 import com.api.canvas.student.repository.UserRepository;
 import com.api.canvas.student.repository.UserSubjectRespository;
@@ -44,12 +43,12 @@ public class SubjectService {
 
     public Subject getSubjectById(Long subjectId) {
         Optional<Subject> subjectOptional = subjectRepository.findById(subjectId);
-        return subjectOptional.orElseThrow(() -> new SubjectNotFound("Materia com ID " + subjectId + " não encontrada"));
+        return subjectOptional.orElseThrow(() -> new DataNotFoundException("Materia com ID " + subjectId + " não encontrada"));
     }
 
     public void deleteSubject(Long subjectId) {
         if (!subjectRepository.existsById(subjectId)) {
-            throw new SubjectNotFound("Materia com ID " + subjectId + " não encontrada");
+            throw new DataNotFoundException("Materia com ID " + subjectId + " não encontrada");
         }
         subjectRepository.deleteById(subjectId);
     }
@@ -60,15 +59,15 @@ public class SubjectService {
             subject.setSubjectId(subjectId);
             return subjectRepository.save(subject);
         }
-        throw new SubjectNotFound("Materia com ID " + subjectId + " não encontrada");
+        throw new DataNotFoundException("Materia com ID " + subjectId + " não encontrada");
     }
 
     public List<UserSubjectResponse> addUserToSubject(Long subjectId, Long userId) {
         User user = userRepository.findById(userId)
-                .orElseThrow(() -> new UserNotFound("Usuário com ID " + userId + " não encontrado"));
+                .orElseThrow(() -> new DataNotFoundException("Usuário com ID " + userId + " não encontrado"));
 
         Subject subject = subjectRepository.findById(subjectId)
-                .orElseThrow(() -> new SubjectNotFound("Matéria com ID " + subjectId + " não encontrada"));
+                .orElseThrow(() -> new DataNotFoundException("Matéria com ID " + subjectId + " não encontrada"));
 
         UserSubject userSubject = UserSubject.builder()
                 .userSubjectId(new UserSubjectId(user.getUserId(), subject.getSubjectId()))
