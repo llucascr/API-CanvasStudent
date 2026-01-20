@@ -5,7 +5,7 @@ import com.api.canvas.student.dto.request.user.UserRequestDTO;
 import com.api.canvas.student.dto.response.user.UserResponseDTO;
 import com.api.canvas.student.entities.User;
 import com.api.canvas.student.exception.UserNotFound;
-import com.api.canvas.student.mapstruct.UserMapper;
+import com.api.canvas.student.mapper.UserMapper;
 import com.api.canvas.student.repository.UserRepository;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -13,9 +13,6 @@ import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PagedModel;
 import org.springframework.http.HttpHeaders;
@@ -31,7 +28,6 @@ import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.time.Duration;
-import java.util.List;
 import java.util.Optional;
 
 
@@ -106,16 +102,18 @@ public class UserService {
         return mapper.toPagedModel(userRepository.findAll(pageable));
     }
 
-    public User getUserById(Long userId){
-        Optional<User> optionalUser = userRepository.findById(userId);
-        return optionalUser.orElseThrow(() -> new UserNotFound("Usuário com ID " + userId + " não encontrado"));
+    public UserResponseDTO getUserById(Long userId){
+        User user = userRepository.findById(userId).orElseThrow(
+                () -> new UserNotFound("Usuário com ID " + userId + " não encontrado"));
+
+        return mapper.toUserResponseDTO(user);
     }
 
     public void deleteUser(Long userId) {
         if (!userRepository.existsById(userId)) {
             throw new UserNotFound("Usuário com ID " + userId + " não encontrado");
         }
-        userRepository.deleteById(userId);
+
     }
 
     public User updateUser(Long userId, User user) {
