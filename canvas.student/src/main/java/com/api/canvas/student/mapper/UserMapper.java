@@ -12,18 +12,18 @@ import org.springframework.data.web.PagedModel;
 
 @Mapper(
         componentModel = MappingConstants.ComponentModel.SPRING,
-        unmappedTargetPolicy = ReportingPolicy.IGNORE
+        unmappedTargetPolicy = ReportingPolicy.ERROR
 )
 public interface UserMapper {
 
     @Mapping(target = "userId", source = "userCanvasId")
-    UserResponseDTO toUserResponseDTO(User entity);
+    UserResponseDTO fromUserToUserResponse(User entity);
 
-    default PagedModel<UserResponseDTO> toPagedModel(Page<User> page) {
+    default PagedModel<UserResponseDTO> fromPageToPagedModel(Page<User> page) {
         if (page == null) {
             return null;
         }
-        Page<UserResponseDTO> pageDto = page.map(this::toUserResponseDTO);
+        Page<UserResponseDTO> pageDto = page.map(this::fromUserToUserResponse);
 
         return new PagedModel<>(pageDto);
     }

@@ -95,18 +95,18 @@ public class UserService {
                 .course(newUser.course())
                 .build();
 
-        return mapper.toUserResponseDTO(userRepository.save(user));
+        return mapper.fromUserToUserResponse(userRepository.save(user));
     }
 
     public PagedModel<UserResponseDTO> getAllUsers(Pageable pageable) {
-        return mapper.toPagedModel(userRepository.findAll(pageable));
+        return mapper.fromPageToPagedModel(userRepository.findAll(pageable));
     }
 
     public UserResponseDTO getUserById(Long userId){
         User user = userRepository.findById(userId).orElseThrow(
                 () -> new UserNotFound("Usuário com ID " + userId + " não encontrado"));
 
-        return mapper.toUserResponseDTO(user);
+        return mapper.fromUserToUserResponse(user);
     }
 
     public void deleteUser(Long userId) {
