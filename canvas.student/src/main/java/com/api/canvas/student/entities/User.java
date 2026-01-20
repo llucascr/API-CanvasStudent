@@ -29,7 +29,7 @@ public class User {
     @Column(nullable = false)
     private String password;
 
-    @Column(nullable = false, unique = true)
+    @Column(name = "user_canvas_id", length = 500, nullable = false, unique = true)
     private String userCanvasId;
 
     @Column(name = "token_canvas",nullable = false)
