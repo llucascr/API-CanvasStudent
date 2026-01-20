@@ -1,4 +1,4 @@
-package com.api.canvas.student.dto;
+package com.api.canvas.student.exception;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

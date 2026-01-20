@@ -1,7 +1,7 @@
 package com.api.canvas.student.service;
 
-import com.api.canvas.student.dto.subject.SubjectDto;
-import com.api.canvas.student.dto.subject.UserSubjectResponse;
+import com.api.canvas.student.dto.request.subject.SubjectRequestDTO;
+import com.api.canvas.student.dto.response.subject.UserSubjectResponse;
 import com.api.canvas.student.entities.*;
 import com.api.canvas.student.exception.SubjectNotFound;
 import com.api.canvas.student.exception.UserNotFound;
@@ -10,7 +10,6 @@ import com.api.canvas.student.repository.UserRepository;
 import com.api.canvas.student.repository.UserSubjectRespository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -26,9 +25,8 @@ public class SubjectService {
     private final UserRepository userRepository;
     private final SubjectRepository subjectRepository;
     private final UserSubjectRespository  userSubjectRespository;
-    private final ModelMapper modelMapper;
 
-    public Subject createSubject(SubjectDto newSubject) {
+    public Subject createSubject(SubjectRequestDTO newSubject) {
 
         Subject subject = Subject.builder()
                 .name(newSubject.name())

@@ -1,6 +1,6 @@
 package com.api.canvas.student.dto.request.user;
 
-public record UserDto(
+public record UserRequestDTO(
         String tokenCanvas,
         String password,
         String university,

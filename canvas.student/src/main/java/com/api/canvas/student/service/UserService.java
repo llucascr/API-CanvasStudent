@@ -1,23 +1,23 @@
 package com.api.canvas.student.service;
 
-import com.api.canvas.student.dto.UserIdDto;
-import com.api.canvas.student.dto.request.user.UserRequest;
-import com.api.canvas.student.dto.response.user.UserResponse;
+import com.api.canvas.student.dto.response.user.UserIdResponseDTO;
+import com.api.canvas.student.dto.request.user.UserRequestDTO;
+import com.api.canvas.student.dto.response.user.UserResponseDTO;
 import com.api.canvas.student.entities.User;
 import com.api.canvas.student.exception.UserNotFound;
+import com.api.canvas.student.mapstruct.UserMapper;
 import com.api.canvas.student.repository.UserRepository;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
-import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PagedModel;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.MediaType;
@@ -25,7 +25,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
 
-import java.awt.*;
 import java.io.IOException;
 import java.net.URI;
 import java.net.http.HttpClient;
@@ -41,12 +40,13 @@ import java.util.Optional;
 public class UserService {
 
     private final UserRepository userRepository;
-    private final ModelMapper modelMapper;
+
+    private final UserMapper mapper;
     private final WebClient canvasWebClient;
 
     private final static Logger log = LoggerFactory.getLogger(UserService.class);
 
-    public UserIdDto getUserCanvasIdAndName(String tokenCanvas) throws EntityNotFoundException {
+    public UserIdResponseDTO getUserCanvasIdAndName(String tokenCanvas) throws EntityNotFoundException {
         return canvasWebClient.get()
                 .uri("/api/v1/users/self")
                 .header(HttpHeaders.AUTHORIZATION, "Bearer " + tokenCanvas)
@@ -56,7 +56,7 @@ public class UserService {
                         response -> Mono.error(new Exception("Autenticação falhou")))
                 .onStatus(HttpStatusCode::is5xxServerError,
                         response -> Mono.error(new Exception("Servidor indisponível")))
-                .bodyToMono(UserIdDto.class)
+                .bodyToMono(UserIdResponseDTO.class)
                 .timeout(Duration.ofSeconds(10))
                 .block();
     }
@@ -85,32 +85,25 @@ public class UserService {
         return null;
     }
 
-    public UserResponse createNewUser(UserRequest newUser) {
-        UserIdDto userIdDto = getUserCanvasIdAndName(newUser.getTokenCanvas());
-        String email = getUserCanvasEmail(newUser.getTokenCanvas(), userIdDto.getId());
+    public UserResponseDTO createNewUser(UserRequestDTO newUser) {
+        UserIdResponseDTO userIdResponseDto = getUserCanvasIdAndName(newUser.tokenCanvas());
+        String email = getUserCanvasEmail(newUser.tokenCanvas(), userIdResponseDto.id());
 
         User user = User.builder()
-                .name(userIdDto.getName())
+                .name(userIdResponseDto.name())
                 .email(email)
-                .password(newUser.getPassword())
-                .userCanvasId(userIdDto.getId())
-                .tokenCanvas(newUser.getTokenCanvas())
-                .university(newUser.getUniversity())
-                .course(newUser.getCourse())
+                .password(newUser.password())
+                .userCanvasId(userIdResponseDto.id())
+                .tokenCanvas(newUser.tokenCanvas())
+                .university(newUser.university())
+                .course(newUser.course())
                 .build();
 
-        return modelMapper.map(userRepository.save(user), UserResponse.class);
+        return mapper.toUserResponseDTO(userRepository.save(user));
     }
 
-    public Page<UserResponse> getAllUsers(int page, int size) {
-        Pageable pageable = PageRequest.of(page, size);
-        Page<User> users = userRepository.findAll(pageable);
-
-        List<UserResponse> userResponses = users.getContent().stream()
-                .map(user -> modelMapper.map(user, UserResponse.class))
-                .toList();
-
-        return new PageImpl<>(userResponses, pageable, users.getTotalElements());
+    public PagedModel<UserResponseDTO> getAllUsers(Pageable pageable) {
+        return mapper.toPagedModel(userRepository.findAll(pageable));
     }
 
     public User getUserById(Long userId){

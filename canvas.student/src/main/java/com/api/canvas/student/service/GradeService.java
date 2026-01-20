@@ -1,7 +1,7 @@
 package com.api.canvas.student.service;
 
-import com.api.canvas.student.dto.grade.GradeRequest;
-import com.api.canvas.student.dto.grade.GradeResponse;
+import com.api.canvas.student.dto.request.grade.GradeRequestDTO;
+import com.api.canvas.student.dto.response.grade.GradeResponseDTO;
 import com.api.canvas.student.entities.Grade;
 import com.api.canvas.student.entities.Subject;
 import com.api.canvas.student.entities.User;
@@ -11,7 +11,6 @@ import com.api.canvas.student.repository.SubjectRepository;
 import com.api.canvas.student.repository.UserRepository;
 import com.api.canvas.student.repository.UserSubjectRespository;
 import lombok.RequiredArgsConstructor;
-import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -24,37 +23,36 @@ public class GradeService {
     private final SubjectRepository subjectRepository;
     private final UserSubjectRespository  userSubjectRespository;
     private final UserRepository userRepository;
-    private final ModelMapper modelMapper;
 
-    public GradeResponse create(GradeRequest request, Long userId, Long subjectId) {
-
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new RuntimeException("User not found"));
-
-        Subject subject = subjectRepository.findById(subjectId)
-                .orElseThrow(() -> new RuntimeException("Subject not found"));
-
-        UserSubject userSubject = (UserSubject) userSubjectRespository.findByUserAndSubject(user, subject)
-                .orElseGet(() -> {
-                    UserSubject newUserSubject = UserSubject.builder()
-                            .user(user)
-                            .subject(subject)
-                            .finalGrade(BigDecimal.ZERO)
-                            .build();
-                    return userSubjectRespository.save(newUserSubject);
-                });
-
-        Grade grade = Grade.builder()
-                .grade(request.getGrade())
-                .weight(request.getWeight())
-                .userSubject(userSubject)
-                .build();
-
-        userSubject.getGrades().add(grade);
-        Grade savedGrade = gradeRepository.save(grade);
-
-        return modelMapper.map(savedGrade, GradeResponse.class);
-    }
+//    public GradeResponseDTO create(GradeRequestDTO request, Long userId, Long subjectId) {
+//
+//        User user = userRepository.findById(userId)
+//                .orElseThrow(() -> new RuntimeException("User not found"));
+//
+//        Subject subject = subjectRepository.findById(subjectId)
+//                .orElseThrow(() -> new RuntimeException("Subject not found"));
+//
+//        UserSubject userSubject = (UserSubject) userSubjectRespository.findByUserAndSubject(user, subject)
+//                .orElseGet(() -> {
+//                    UserSubject newUserSubject = UserSubject.builder()
+//                            .user(user)
+//                            .subject(subject)
+//                            .finalGrade(BigDecimal.ZERO)
+//                            .build();
+//                    return userSubjectRespository.save(newUserSubject);
+//                });
+//
+//        Grade grade = Grade.builder()
+//                .grade(request.grade())
+//                .weight(request.weight())
+//                .userSubject(userSubject)
+//                .build();
+//
+//        userSubject.getGrades().add(grade);
+//        Grade savedGrade = gradeRepository.save(grade);
+//
+//        return modelMapper.map(savedGrade, GradeResponseDTO.class);
+//    }
 
 
 }

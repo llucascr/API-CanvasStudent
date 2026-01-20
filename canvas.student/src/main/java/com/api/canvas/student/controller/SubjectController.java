@@ -1,6 +1,6 @@
 package com.api.canvas.student.controller;
 
-import com.api.canvas.student.dto.subject.SubjectDto;
+import com.api.canvas.student.dto.request.subject.SubjectRequestDTO;
 import com.api.canvas.student.entities.Subject;
 import com.api.canvas.student.service.SubjectService;
 import lombok.RequiredArgsConstructor;
@@ -18,7 +18,7 @@ public class SubjectController {
     private final SubjectService subjectService;
 
     @PostMapping
-    public ResponseEntity<Subject> createSubject(@RequestBody SubjectDto subjectDto) {
+    public ResponseEntity<Subject> createSubject(@RequestBody SubjectRequestDTO subjectDto) {
         return ResponseEntity.status(HttpStatus.CREATED).body(subjectService.createSubject(subjectDto));
     }
 

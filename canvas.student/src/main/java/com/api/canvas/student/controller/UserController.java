@@ -1,11 +1,13 @@
 package com.api.canvas.student.controller;
 
-import com.api.canvas.student.dto.request.user.UserDto;
-import com.api.canvas.student.dto.request.user.UserRequest;
-import com.api.canvas.student.dto.response.user.UserResponse;
+import com.api.canvas.student.dto.request.user.UserRequestDTO;
+import com.api.canvas.student.dto.response.user.UserResponseDTO;
 import com.api.canvas.student.entities.User;
 import com.api.canvas.student.service.UserService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
+import org.springframework.data.web.PagedModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -47,16 +49,13 @@ public class UserController {
     }
 
     @PostMapping
-    public ResponseEntity<UserResponse> createNewUser(@RequestBody UserRequest newUser) {
+    public ResponseEntity<UserResponseDTO> createNewUser(@RequestBody UserRequestDTO newUser) {
         return ResponseEntity.status(HttpStatus.CREATED).body(userService.createNewUser(newUser));
     }
 
     @GetMapping("/all")
-    public ResponseEntity<List<UserResponse>> getAllUser(
-            @RequestParam(defaultValue = "0", required = false) int page,
-            @RequestParam(defaultValue = "10", required = false) int size
-    ) {
-        return ResponseEntity.status(HttpStatus.OK).body(userService.getAllUsers(page, size).getContent());
+    public ResponseEntity<PagedModel<UserResponseDTO>> getAllUser(@PageableDefault Pageable pageable) {
+        return ResponseEntity.status(HttpStatus.OK).body(userService.getAllUsers(pageable));
     }
 
     @GetMapping
