@@ -3,6 +3,7 @@ package com.api.canvas.student.controller;
 import com.api.canvas.student.dto.request.user.UserRequestDTO;
 import com.api.canvas.student.dto.response.user.UserResponseDTO;
 import com.api.canvas.student.entities.User;
+import com.api.canvas.student.service.CanvasService;
 import com.api.canvas.student.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
@@ -16,33 +17,15 @@ import java.util.List;
 
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/api/user")
+@RequestMapping("/api/v1/user")
 public class UserController {
 
-
     private final UserService userService;
-
-    /*@GetMapping("{tokenCanvas}")
-    public ResponseEntity<?> getUserCanvasId(@PathVariable String tokenCanvas) {
-        try {
-            return ResponseEntity.ok(userService.getUserCanvasIdAndName(tokenCanvas));
-        } catch (EntityNotFoundException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
-        }
-    }
-
-    @GetMapping("{tokenCanvas}/{userCanvasId}")
-    public ResponseEntity<?> getUserCanvasEmail(@PathVariable String tokenCanvas, @PathVariable String userCanvasId) {
-        try {
-            return ResponseEntity.ok(userService.getUserCanvasEmail(tokenCanvas, userCanvasId));
-        } catch (EntityNotFoundException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
-        }
-    }*/
+    private final CanvasService canvasService;
 
     @GetMapping("/verifyToken")
     public ResponseEntity<?> getUserCanvasId(@RequestParam String tokenCanvas) {
-        if (userService.getUserCanvasIdAndName(tokenCanvas) == null) {
+        if (canvasService.getUserCanvasIdAndName(tokenCanvas) == null) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Token Invalido");
         }
         return ResponseEntity.status(HttpStatus.OK).body("Token Valido");
