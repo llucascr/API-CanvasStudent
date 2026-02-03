@@ -10,7 +10,7 @@ spring:
         default_schema: public
     generate-ddl: true
     hibernate:
-      ddl-auto: validate
+      ddl-auto: update
     open-in-view: true
 
   datasource:
@@ -18,10 +18,6 @@ spring:
     username: postgres
     password: postgres
     driver-class-name: org.postgresql.Driver
-
-  flyway:
-    enabled: true
-    baseline-on-migrate: true
 
   rabbitmq:
     addresses: amqps://auwifbhi:iCWziig5eNuhcZbJP5WeFX5ns3Bd2Wvw@jaragua.lmq.cloudamqp.com/auwifbhi
