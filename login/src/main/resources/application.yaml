@@ -12,12 +12,17 @@ spring:
     hibernate:
       ddl-auto: update
     open-in-view: true
+    defer-datasource-initialization: true
 
   datasource:
     url: jdbc:postgresql://localhost:5431/ms-login
     username: postgres
     password: postgres
     driver-class-name: org.postgresql.Driver
+
+  sql:
+    init:
+       mode: always
 
   rabbitmq:
     addresses: amqps://auwifbhi:iCWziig5eNuhcZbJP5WeFX5ns3Bd2Wvw@jaragua.lmq.cloudamqp.com/auwifbhi
