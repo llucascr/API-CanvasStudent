@@ -1,8 +1,8 @@
 server:
-  port: 8081
+  port: 8082
 spring:
   application:
-    name: APICanvasStudent
+    name: login
   jpa:
     show-sql: true
     properties:
@@ -14,7 +14,7 @@ spring:
     open-in-view: true
 
   datasource:
-    url: jdbc:postgresql://localhost:5431/apiCanvasStudent
+    url: jdbc:postgresql://localhost:5431/ms-login
     username: postgres
     password: postgres
     driver-class-name: org.postgresql.Driver
