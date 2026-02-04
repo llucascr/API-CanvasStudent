@@ -41,7 +41,7 @@ A partir do token de autenticação do usuário no Canvas, a API:
 
 ## Modelo de Objetos
 
-![Modelo de Objetos](https://github.com/llucascr/API-CanvasStudent/blob/main/img/Driagrams-ApiCanvasStudent-Modelo%20de%20Objeto.drawio.png)
+![Modelo de Objetos](https://github.com/llucascr/API-CanvasStudent/canvas.student/img/Driagrams-ApiCanvasStudent-Modelo%20de%20Objeto.drawio.png)
 
 ## 📁 Estrutura do Projeto
 
