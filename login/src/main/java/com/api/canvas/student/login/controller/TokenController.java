@@ -1,9 +1,13 @@
 package com.api.canvas.student.login.controller;
 
-import com.api.canvas.student.login.controller.dto.LoginRequest;
-import com.api.canvas.student.login.controller.dto.LoginResponse;
+import com.api.canvas.student.login.controller.dto.*;
+import com.api.canvas.student.login.entities.Role;
 import com.api.canvas.student.login.entities.User;
+import com.api.canvas.student.login.exception.DataAlreadyExistException;
+import com.api.canvas.student.login.repository.RoleRepository;
 import com.api.canvas.student.login.repository.UserRepository;
+import com.api.canvas.student.login.service.CanvasService;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -19,6 +23,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.time.Instant;
 import java.util.Optional;
+import java.util.Set;
 
 @RequiredArgsConstructor
 @RestController
@@ -26,7 +31,9 @@ public class TokenController {
 
     private final JwtEncoder jwtEncoder;
     private final UserRepository userRepository;
+    private final RoleRepository roleRepository;
     private final BCryptPasswordEncoder passwordEncoder;
+    private final CanvasService canvasService;
 
     @PostMapping("/login")
     public ResponseEntity<LoginResponse> login(@RequestBody LoginRequest loginRequest) {
@@ -50,6 +57,44 @@ public class TokenController {
 
         return ResponseEntity.ok(new LoginResponse(jwtValue, expiresIn));
 
+    }
+
+    @PostMapping("/register")
+    @Transactional
+    public ResponseEntity<UserResponseDTO> register(@RequestBody UserRequestDTO dto) {
+
+        UserIdResponseDTO userIdResponseDto = canvasService.getUserCanvasIdAndName(dto.tokenCanvas());
+        String email = canvasService.getUserCanvasEmail(dto.tokenCanvas(), userIdResponseDto.id());
+
+        if (userRepository.existsByEmail(email)) {
+            throw new DataAlreadyExistException("Email invalid");
+        }
+
+        Role basicRole = roleRepository.findByName(Role.Values.STUDENT.getDescription());
+        userRepository.findByEmail(email);
+
+        User user = User.builder()
+                .name(userIdResponseDto.name())
+                .email(email)
+                .password(passwordEncoder.encode(dto.password()))
+                .userCanvasId(userIdResponseDto.id())
+                .tokenCanvas(dto.tokenCanvas())
+                .university(dto.university())
+                .course(dto.course())
+                .roles(Set.of(basicRole))
+                .build();
+
+        userRepository.save(user);
+
+        return ResponseEntity.ok(
+                new UserResponseDTO(
+                    user.getUserId(),
+                    user.getName(),
+                    user.getEmail(),
+                    user.getUniversity(),
+                    user.getCourse()
+                )
+        );
     }
 
 }
