@@ -1,24 +1,24 @@
 package com.api.canvas.student.controller;
 
-import com.api.canvas.student.dto.SubjectDto;
+import com.api.canvas.student.dto.request.subject.SubjectRequestDTO;
 import com.api.canvas.student.entities.Subject;
 import com.api.canvas.student.service.SubjectService;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@RequiredArgsConstructor
 @RestController
 @RequestMapping("/api/subject")
 public class SubjectController {
 
-    @Autowired
-    private SubjectService subjectService;
+    private final SubjectService subjectService;
 
     @PostMapping
-    public ResponseEntity<Subject> createSubject(@RequestBody SubjectDto subjectDto) {
+    public ResponseEntity<Subject> createSubject(@RequestBody SubjectRequestDTO subjectDto) {
         return ResponseEntity.status(HttpStatus.CREATED).body(subjectService.createSubject(subjectDto));
     }
 
@@ -41,6 +41,11 @@ public class SubjectController {
     @PutMapping
     public ResponseEntity<?> updateSubject(@RequestBody Subject subject) {
         return ResponseEntity.ok(subjectService.updateSubject(subject.getSubjectId(), subject));
+    }
+
+    @PostMapping(path = "/addUser")
+    public ResponseEntity<?> addUserToSubject(@RequestParam Long subjectId, @RequestParam Long userId) {
+        return ResponseEntity.status(HttpStatus.OK).body(subjectService.addUserToSubject(subjectId, userId));
     }
 
 }
