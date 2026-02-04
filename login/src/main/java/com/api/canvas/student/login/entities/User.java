@@ -1,7 +1,9 @@
 package com.api.canvas.student.login.entities;
 
+import com.api.canvas.student.login.controller.dto.LoginRequest;
 import jakarta.persistence.*;
 import lombok.*;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.Set;
 
@@ -48,4 +50,8 @@ public class User {
     )
     private Set<Role> roles;
 
+
+    public boolean isLoginCorrect(LoginRequest loginRequest, PasswordEncoder passwordEncoder) {
+        return passwordEncoder.matches(loginRequest.password(), this.password);
+    }
 }
