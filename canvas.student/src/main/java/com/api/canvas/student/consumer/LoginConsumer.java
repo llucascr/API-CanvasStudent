@@ -1,6 +1,7 @@
 package com.api.canvas.student.consumer;
 
 import com.api.canvas.student.dto.response.user.UserResponseDTO;
+import com.api.canvas.student.entities.enums.ActionMessage;
 import com.api.canvas.student.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
@@ -19,7 +20,16 @@ public class LoginConsumer {
     @RabbitListener(queues = "${broker.queue.login.name}")
     public void listenerLogin(UserResponseDTO dto) {
         log.info("Message from ms-login");
-        userService.save(dto);
+
+        if (dto.action().equals(ActionMessage.CREATE)) {
+            userService.save(dto);
+        } else if (dto.action().equals(ActionMessage.LOGIN)) {
+
+        }
+
+
+
+
     }
 
 }
