@@ -3,6 +3,7 @@ package com.api.canvas.student.service;
 import com.api.canvas.student.dto.request.subject.SubjectRequestDTO;
 import com.api.canvas.student.dto.response.subject.UserSubjectResponse;
 import com.api.canvas.student.entities.*;
+import com.api.canvas.student.entities.replica.User;
 import com.api.canvas.student.exception.DataNotFoundException;
 import com.api.canvas.student.repository.SubjectRepository;
 import com.api.canvas.student.repository.UserRepository;

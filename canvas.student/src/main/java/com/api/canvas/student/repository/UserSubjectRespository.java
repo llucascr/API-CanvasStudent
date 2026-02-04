@@ -1,7 +1,7 @@
 package com.api.canvas.student.repository;
 
 import com.api.canvas.student.entities.Subject;
-import com.api.canvas.student.entities.User;
+import com.api.canvas.student.entities.replica.User;
 import com.api.canvas.student.entities.UserSubject;
 import org.springframework.data.jpa.repository.JpaRepository;
 

@@ -1,6 +1,8 @@
 package com.api.canvas.student.login.entities;
 
+import com.api.canvas.student.login.controller.dto.ActionMessage;
 import com.api.canvas.student.login.controller.dto.LoginRequest;
+import com.api.canvas.student.login.controller.dto.UserResponseDTO;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -50,6 +52,19 @@ public class User {
     )
     private Set<Role> roles;
 
+    public UserResponseDTO toUserResponseDTO(ActionMessage actionMessage) {
+        return new UserResponseDTO(
+                this.getUserId(),
+                this.getName(),
+                this.getEmail(),
+                this.getUserCanvasId(),
+                this.getTokenCanvas(),
+                this.getUniversity(),
+                this.getCourse(),
+                this.getRoles(),
+                actionMessage
+        );
+    }
 
     public boolean isLoginCorrect(LoginRequest loginRequest, PasswordEncoder passwordEncoder) {
         return passwordEncoder.matches(loginRequest.password(), this.password);

@@ -9,6 +9,8 @@ import com.api.canvas.student.login.repository.UserRepository;
 import com.api.canvas.student.login.service.CanvasService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -29,11 +31,17 @@ import java.util.Set;
 @RestController
 public class TokenController {
 
-    private final JwtEncoder jwtEncoder;
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
-    private final BCryptPasswordEncoder passwordEncoder;
+
     private final CanvasService canvasService;
+
+    private final JwtEncoder jwtEncoder;
+    private final BCryptPasswordEncoder passwordEncoder;
+
+    private final RabbitTemplate rabbitTemplate;
+    @Value("${broker.queue.login.name}")
+    private String routingKey;
 
     @PostMapping("/login")
     public ResponseEntity<LoginResponse> login(@RequestBody LoginRequest loginRequest) {
@@ -85,16 +93,10 @@ public class TokenController {
                 .build();
 
         userRepository.save(user);
+        UserResponseDTO userResponseDTO = user.toUserResponseDTO(ActionMessage.CREATE);
 
-        return ResponseEntity.ok(
-                new UserResponseDTO(
-                    user.getUserId(),
-                    user.getName(),
-                    user.getEmail(),
-                    user.getUniversity(),
-                    user.getCourse()
-                )
-        );
+        rabbitTemplate.convertAndSend("", routingKey, userResponseDTO);
+        return ResponseEntity.ok(userResponseDTO);
     }
 
 }

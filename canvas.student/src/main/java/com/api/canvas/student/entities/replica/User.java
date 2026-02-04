@@ -1,10 +1,12 @@
-package com.api.canvas.student.entities;
+package com.api.canvas.student.entities.replica;
 
+import com.api.canvas.student.entities.UserSubject;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 
 import java.util.List;
+import java.util.Set;
 
 @Setter
 @Getter
@@ -12,7 +14,7 @@ import java.util.List;
 @AllArgsConstructor
 @Builder
 @Entity
-@Table(name = "user_tb")
+@Table(name = "replica_tb_user")
 public class User {
 
     @Id
@@ -25,9 +27,6 @@ public class User {
 
     @Column(nullable = false)
     private String email;
-
-    @Column(nullable = false)
-    private String password;
 
     @Column(name = "user_canvas_id", length = 500, nullable = false, unique = true)
     private String userCanvasId;
@@ -44,5 +43,13 @@ public class User {
     @OneToMany(mappedBy = "user")
     @JsonIgnore
     private List<UserSubject> subjects;
+
+    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @JoinTable(
+            name = "tb_users_roles",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "role_id")
+    )
+    private Set<Role> roles;
 
 }

@@ -1,6 +1,6 @@
 package com.api.canvas.student.entities;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.api.canvas.student.entities.replica.User;
 import jakarta.persistence.*;
 import lombok.*;
 
