@@ -13,6 +13,5 @@ public record UserResponseDTO(
         String tokenCanvas,
         String university,
         String course,
-        Set<Role> roles,
-        ActionMessage action
+        Set<Role> roles
 ) {}

@@ -101,7 +101,7 @@ public class TokenController {
                 .build();
 
         userRepository.save(user);
-        UserResponseDTO userResponseDTO = user.toUserResponseDTO(ActionMessage.CREATE);
+        UserResponseDTO userResponseDTO = user.toUserResponseDTO();
 
         rabbitTemplate.convertAndSend("", routingKey, userResponseDTO);
         return ResponseEntity.ok(userResponseDTO);

@@ -20,16 +20,7 @@ public class LoginConsumer {
     @RabbitListener(queues = "${broker.queue.login.name}")
     public void listenerLogin(UserResponseDTO dto) {
         log.info("Message from ms-login");
-
-        if (dto.action().equals(ActionMessage.CREATE)) {
-            userService.save(dto);
-        } else if (dto.action().equals(ActionMessage.LOGIN)) {
-
-        }
-
-
-
-
+        userService.save(dto);
     }
 
 }

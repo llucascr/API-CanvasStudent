@@ -52,7 +52,7 @@ public class User {
     )
     private Set<Role> roles;
 
-    public UserResponseDTO toUserResponseDTO(ActionMessage actionMessage) {
+    public UserResponseDTO toUserResponseDTO() {
         return new UserResponseDTO(
                 this.getUserId(),
                 this.getName(),
@@ -61,8 +61,7 @@ public class User {
                 this.getTokenCanvas(),
                 this.getUniversity(),
                 this.getCourse(),
-                this.getRoles(),
-                actionMessage
+                this.getRoles()
         );
     }
 
