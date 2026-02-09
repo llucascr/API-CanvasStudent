@@ -1,6 +1,8 @@
 package com.api.canvas.student.service;
 
 import com.api.canvas.student.dto.response.user.UserResponseDTO;
+import com.api.canvas.student.entities.replica.User;
+import com.api.canvas.student.exception.DataNotFoundException;
 import com.api.canvas.student.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
@@ -23,6 +25,11 @@ public class UserService {
 
         userRepository.save(dto.toEntity());
 
+    }
+
+    public User findById(Long userId) {
+        return userRepository.findById(userId)
+                .orElseThrow(() -> new DataNotFoundException("Usuário com ID " + userId + " não encontrado"));
     }
 
 }

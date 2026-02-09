@@ -1,19 +1,15 @@
 package com.api.canvas.student.service;
 
 import com.api.canvas.student.dto.request.subject.SubjectRequestDTO;
+import com.api.canvas.student.dto.request.userSubjectGrade.UserSubjectGradeRequest;
 import com.api.canvas.student.dto.response.subject.UserSubjectResponse;
 import com.api.canvas.student.entities.*;
-import com.api.canvas.student.entities.replica.User;
 import com.api.canvas.student.exception.DataNotFoundException;
 import com.api.canvas.student.repository.SubjectRepository;
-import com.api.canvas.student.repository.UserRepository;
-import com.api.canvas.student.repository.UserSubjectRespository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
-import java.math.BigDecimal;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -22,9 +18,7 @@ import java.util.Optional;
 @Service
 public class SubjectService {
 
-    private final UserRepository userRepository;
     private final SubjectRepository subjectRepository;
-    private final UserSubjectRespository  userSubjectRespository;
 
     public Subject createSubject(SubjectRequestDTO newSubject) {
 
@@ -32,7 +26,6 @@ public class SubjectService {
                 .name(newSubject.name())
                 .semester(newSubject.semester())
                 .status(StatusSubject.CURSANDO)
-                .users(new ArrayList<>())
                 .build();
 
         return subjectRepository.save(subject);
@@ -42,9 +35,8 @@ public class SubjectService {
         return subjectRepository.findAll();
     }
 
-    public Subject getSubjectById(Long subjectId) {
-        Optional<Subject> subjectOptional = subjectRepository.findById(subjectId);
-        return subjectOptional.orElseThrow(() -> new DataNotFoundException("Materia com ID " + subjectId + " não encontrada"));
+    public Optional<Subject> findById(Long subjectId) {
+        return subjectRepository.findById(subjectId);
     }
 
     public void deleteSubject(Long subjectId) {
@@ -62,36 +54,5 @@ public class SubjectService {
         }
         throw new DataNotFoundException("Materia com ID " + subjectId + " não encontrada");
     }
-
-    public List<UserSubjectResponse> addUserToSubject(Long subjectId, Long userId) {
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new DataNotFoundException("Usuário com ID " + userId + " não encontrado"));
-
-        Subject subject = subjectRepository.findById(subjectId)
-                .orElseThrow(() -> new DataNotFoundException("Matéria com ID " + subjectId + " não encontrada"));
-
-        UserSubject userSubject = UserSubject.builder()
-                .userSubjectId(new UserSubjectId(user.getUserId(), subject.getSubjectId()))
-                .user(user)
-                .subject(subject)
-                .finalGrade(BigDecimal.valueOf(0))
-                .build();
-
-        userSubjectRespository.save(userSubject);
-
-        List<UserSubject> allSubjects = userSubjectRespository.findByUser(user);
-
-
-        return allSubjects.stream()
-                .map(us -> new UserSubjectResponse(
-                        us.getSubject().getSubjectId(),
-                        us.getSubject().getName(),
-                        us.getSubject().getSemester(),
-                        us.getSubject().getStatus(),
-                        us.getFinalGrade()
-                ))
-                .toList();
-    }
-
 
 }

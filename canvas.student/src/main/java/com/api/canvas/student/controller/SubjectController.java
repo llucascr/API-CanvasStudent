@@ -1,6 +1,7 @@
 package com.api.canvas.student.controller;
 
 import com.api.canvas.student.dto.request.subject.SubjectRequestDTO;
+import com.api.canvas.student.dto.request.userSubjectGrade.UserSubjectGradeRequest;
 import com.api.canvas.student.entities.Subject;
 import com.api.canvas.student.service.SubjectService;
 import lombok.RequiredArgsConstructor;
@@ -28,8 +29,8 @@ public class SubjectController {
     }
 
     @GetMapping
-    public ResponseEntity<?> getSubjectById(@RequestParam Long subjectId) {
-        return ResponseEntity.status(HttpStatus.OK).body(subjectService.getSubjectById(subjectId));
+    public ResponseEntity<?> findById(@RequestParam Long subjectId) {
+        return ResponseEntity.status(HttpStatus.OK).body(subjectService.findById(subjectId));
     }
 
     @DeleteMapping
@@ -41,11 +42,6 @@ public class SubjectController {
     @PutMapping
     public ResponseEntity<?> updateSubject(@RequestBody Subject subject) {
         return ResponseEntity.ok(subjectService.updateSubject(subject.getSubjectId(), subject));
-    }
-
-    @PostMapping(path = "/addUser")
-    public ResponseEntity<?> addUserToSubject(@RequestParam Long subjectId, @RequestParam Long userId) {
-        return ResponseEntity.status(HttpStatus.OK).body(subjectService.addUserToSubject(subjectId, userId));
     }
 
 }

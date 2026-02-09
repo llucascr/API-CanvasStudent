@@ -1,5 +1,6 @@
 package com.api.canvas.student.exception.handler;
 
+import com.api.canvas.student.exception.DataAlreadyExistException;
 import com.api.canvas.student.exception.DataNotFoundException;
 import com.api.canvas.student.exception.ExceptionResponse;
 import lombok.extern.slf4j.Slf4j;
@@ -30,6 +31,16 @@ public class CustomEntityResponseHandler extends ResponseEntityExceptionHandler 
 
     @ExceptionHandler(DataNotFoundException.class)
     public final ResponseEntity<ExceptionResponse> handleDataNotFoundException(DataNotFoundException ex, WebRequest request) {
+        ExceptionResponse response = new ExceptionResponse(
+                LocalDateTime.now(),
+                ex.getMessage(),
+                request.getDescription(false)
+        );
+        return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(DataAlreadyExistException.class)
+    public final ResponseEntity<ExceptionResponse> handleDataNotFoundException(DataAlreadyExistException ex, WebRequest request) {
         ExceptionResponse response = new ExceptionResponse(
                 LocalDateTime.now(),
                 ex.getMessage(),

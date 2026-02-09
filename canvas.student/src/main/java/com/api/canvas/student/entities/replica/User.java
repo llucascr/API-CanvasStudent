@@ -1,7 +1,7 @@
 package com.api.canvas.student.entities.replica;
 
-import com.api.canvas.student.entities.UserSubject;
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.api.canvas.student.dto.response.user.UserResponseDTO;
+import com.api.canvas.student.entities.Subject;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -39,10 +39,6 @@ public class User {
     @Column(nullable = false)
     private String course;
 
-    @OneToMany(mappedBy = "user")
-    @JsonIgnore
-    private List<UserSubject> subjects;
-
     @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinTable(
             name = "replica_tb_users_roles",
@@ -50,5 +46,18 @@ public class User {
             inverseJoinColumns = @JoinColumn(name = "role_id")
     )
     private Set<Role> roles;
+
+    public UserResponseDTO toResponseDTO() {
+        return new UserResponseDTO(
+                this.userId,
+                this.name,
+                this.email,
+                this.userCanvasId,
+                this.tokenCanvas,
+                this.university,
+                this.course,
+                this.roles
+        );
+    }
 
 }
