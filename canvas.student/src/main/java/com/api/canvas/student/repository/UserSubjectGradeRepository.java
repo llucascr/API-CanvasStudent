@@ -1,5 +1,6 @@
 package com.api.canvas.student.repository;
 
+import com.api.canvas.student.dto.response.userSubjectGrade.GradesForSubjectResponse;
 import com.api.canvas.student.dto.response.userSubjectGrade.SubjectGradeByUserResponse;
 import com.api.canvas.student.dto.response.userSubjectGrade.UserSubjectGradeResponse;
 import com.api.canvas.student.entities.UserSubjectGrade;
@@ -9,6 +10,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.util.List;
 import java.util.Optional;
 
 public interface UserSubjectGradeRepository extends JpaRepository<UserSubjectGrade, Integer> {
@@ -36,5 +38,16 @@ public interface UserSubjectGradeRepository extends JpaRepository<UserSubjectGra
         """
     )
     Optional<Page<SubjectGradeByUserResponse>> findUserSubjectGradeByUserId(@Param("userId") Long userId, Pageable pageable);
+
+    @Query(value = """
+        SELECT
+            s.name,
+            usg.grade,
+            usg.weight
+        FROM UserSubjectGrade usg
+        INNER JOIN usg.subject s
+        WHERE usg.user.userId = :userId AND usg.subject.name = :subjectName
+    """)
+    Optional<List<GradesForSubjectResponse>> findAllGradesForSubjects(@Param("userId") Long userId, @Param("subjectName") String subjectName);
 
 }

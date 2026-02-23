@@ -1,6 +1,7 @@
 package com.api.canvas.student.service;
 
 import com.api.canvas.student.dto.request.userSubjectGrade.UserSubjectGradeRequest;
+import com.api.canvas.student.dto.response.userSubjectGrade.GradesForSubjectResponse;
 import com.api.canvas.student.dto.response.userSubjectGrade.SubjectGradeByUserResponse;
 import com.api.canvas.student.dto.response.userSubjectGrade.UserSubjectGradeResponse;
 import com.api.canvas.student.entities.UserSubjectGrade;
@@ -14,6 +15,7 @@ import org.springframework.data.web.PagedModel;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @RequiredArgsConstructor
@@ -54,6 +56,11 @@ public class UserSubjectGradeService {
                 .orElseThrow(() -> new DataNotFoundException("Nenhuma matéria encontrada"));
 
         return new PagedModel<>(subjectForUser);
+    }
+
+    public List<GradesForSubjectResponse> findAllGradesForSubjects(Long userId, String subjectName) {
+        return userSubjectGradeRepository.findAllGradesForSubjects(userId, subjectName)
+                .orElseThrow(() -> new DataNotFoundException("Nenhuma nota dessa matéria encontrada"));
     }
 
 }
