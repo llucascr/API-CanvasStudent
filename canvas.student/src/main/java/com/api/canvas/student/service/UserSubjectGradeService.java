@@ -14,6 +14,8 @@ import org.springframework.data.web.PagedModel;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @RequiredArgsConstructor
 @Service
 public class UserSubjectGradeService {
@@ -25,19 +27,26 @@ public class UserSubjectGradeService {
 
     public UserSubjectGradeResponse create(UserSubjectGradeRequest dto) {
 
-        if (userSubjectGradeRepository.findByUserIdAndSubjectName(dto.userId(), dto.subject().name()).isPresent()) {
-            throw new DataAlreadyExistException("Matéria já existe");
+        Optional<UserSubjectGrade> userSubjectGrade = userSubjectGradeRepository
+                .findByUserIdAndSubjectName(dto.userId(), dto.subject().name());
+
+        if (userSubjectGrade.isPresent()) {
+            return userSubjectGradeRepository.save(UserSubjectGrade.builder()
+                    .user(userSubjectGrade.get().getUser())
+                    .subject(userSubjectGrade.get().getSubject())
+                    .grade(dto.grade())
+                    .weight(dto.weight())
+                    .description(dto.description())
+                    .build()).toResponse();
         }
 
-        UserSubjectGrade userSubjectGrade = UserSubjectGrade.builder()
+        return userSubjectGradeRepository.save(UserSubjectGrade.builder()
                 .user(userService.findById(dto.userId()))
                 .subject(subjectService.createSubject(dto.subject()))
                 .grade(dto.grade())
                 .weight(dto.weight())
                 .description(dto.description())
-                .build();
-
-        return userSubjectGradeRepository.save(userSubjectGrade).toResponse();
+                .build()).toResponse();
     }
 
     public PagedModel<SubjectGradeByUserResponse> findAllByUserId(Long userId, Pageable pageable) {
