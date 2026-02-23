@@ -12,7 +12,6 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-@Data
 @Entity
 @Table(name = "tb_subject")
 public class Subject {
@@ -26,7 +25,7 @@ public class Subject {
     private String name;
 
     @Column(nullable = false)
-    private byte semester;
+    private Byte semester;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)

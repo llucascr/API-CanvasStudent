@@ -16,22 +16,25 @@ public interface UserSubjectGradeRepository extends JpaRepository<UserSubjectGra
     @Query("SELECT u FROM UserSubjectGrade u JOIN u.subject s WHERE  u.user.userId = :userId AND s.name = :subjectName")
     Optional<UserSubjectGrade> findByUserIdAndSubjectName(Long userId, String subjectName);
 
-    @Query(value = """
-        SELECT 
-            s.name AS materia,
+    @Query(
+            value = """
+        SELECT new com.api.canvas.student.dto.response.userSubjectGrade.SubjectGradeByUserResponse(
+            s.name,
+            s.semester,
             usg.description,
             usg.grade,
             usg.weight
-        FROM tb_user_subject_grade usg
-        INNER JOIN tb_subject s ON usg.subject_id = s.subject_id
-        WHERE usg.user_id = :userId
+        )
+        FROM UserSubjectGrade usg
+        INNER JOIN usg.subject s
+        WHERE usg.user.userId = :userId
         """,
             countQuery = """
-        SELECT COUNT(*)
-        FROM tb_user_subject_grade usg
-        WHERE usg.user_id = :userId
-        """,
-            nativeQuery = true)
+        SELECT COUNT(usg)
+        FROM UserSubjectGrade usg
+        WHERE usg.user.userId = :userId
+        """
+    )
     Optional<Page<SubjectGradeByUserResponse>> findUserSubjectGradeByUserId(@Param("userId") Long userId, Pageable pageable);
 
 }
