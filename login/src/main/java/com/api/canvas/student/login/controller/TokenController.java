@@ -54,7 +54,7 @@ public class TokenController {
         }
 
         Instant now = Instant.now();
-        long expiresIn = 300L;
+        long expiresIn = 86400000L; // 24 horas
 
         String scopes = user.get().getRoles()
                 .stream()
